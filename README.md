@@ -6,7 +6,7 @@
 ---
 
 ## 🚀 Live Deployment
-**[🔗 View Live App on Vercel](REPLACE_WITH_YOUR_VERCEL_URL)**
+**[🔗 View Live App on Vercel]  https://brew-alpha.vercel.app **
 
 ---
 
