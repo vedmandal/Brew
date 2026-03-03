@@ -1,8 +1,41 @@
-🎬 AI Movie Insight BuilderBrew Full-Stack Developer Internship Assignment🌟 OverviewAn advanced MERN tool that transforms raw IMDb movie data into actionable audience insights. Users provide an IMDb ID (e.g., tt0816692), and the app generates a sentiment-driven AI summary of audience reviews.[🔗 VIEW LIVE DEPLOYMENT](Insert your Vercel Link Here)🧠 Tech Stack RationaleI chose these technologies to align with the company's focus on scalable web apps:Next.js (App Router): Utilized for fast server-side rendering and secure API routing to handle external data fetching.MongoDB Atlas: Implemented to store movie data and search history, ensuring data persistence across sessions.Gemini 2.5-Flash: Integrated to provide high-speed, professional-grade audience sentiment analysis.Cheerio Scraper: Built a custom server-side scraper to extract raw audience feedback directly from IMDb.🛠️ Features & FunctionalitySmart Metadata Fetching: Automatically retrieves posters, titles, and release years.AI Sentiment Summary: Uses LLMs to condense hundreds of user reviews into two concise sentences.Persistent History: Previous searches are saved in a sidebar for instant reference.Responsive & Modern UI: A "Premium" dark-themed interface built for both desktop and mobile devices.⚙️ Setup & Installation1. Clone the ProjectBashgit clone <your-repo-link>
-cd brew/brew
-2. Configure Environment VariablesCreate a .env.local file based on the provided .env.example:PlaintextMONGODB_URI=your_uri_here
-GEMINI_API_KEY=your_key_here
-OMDB_API_KEY=da1b2b62
-3. Run LocallyBashnpm install
-npm run dev
-📝 AssumptionsValidation: Assumed input will always be in the standard IMDb ttXXXXXXX format.Scraping Depth: Scraped the top 3 reviews to balance AI processing speed with accuracy.Error Handling: Implemented graceful fallbacks for API rate limits to ensure a bug-free experience.
+# 🎬 AI Movie Insight Builder
+### Brew Full-Stack Developer Internship | Round 1 Submission
+
+---
+
+## 🚀 Live Deployment
+**[🔗 View Live App on Vercel](REPLACE_WITH_YOUR_VERCEL_URL)**
+
+---
+
+## 🌟 Overview
+This is a high-performance MERN-stack application designed to transform raw IMDb data into meaningful audience insights. By simply entering an IMDb ID, the app fetches metadata, scrapes user reviews, and utilizes the **Gemini 2.5-Flash** model to generate a professional sentiment analysis.
+
+---
+
+## 🧠 Tech Stack Rationale
+I chose this specific stack to meet the "Premium and Modern" requirements of the Brew AI assignment:
+
+* **Next.js 14 (App Router):** Provides a robust full-stack framework with optimized Server-Side Rendering (SSR) for SEO and performance.
+* **MongoDB Atlas:** Implemented for session persistence, allowing the application to cache searches and provide a "History" feature for users.
+* **Gemini 2.5-Flash:** Selected for its industry-leading inference speed and accuracy in distilling complex audience sentiments into concise summaries.
+* **Cheerio:** Used for server-side scraping to extract real-time audience feedback directly from IMDb reviews.
+* **Tailwind CSS:** Enabled a rapid development of a responsive, "dark-mode" premium UI that works across all device types.
+
+---
+
+## 🛠️ Key Features
+* **Automated Metadata:** Fetches posters, titles, and release years via OMDb API.
+* **AI Sentiment Analysis:** Condenses hundreds of words of raw reviews into 2-3 high-impact sentences.
+* **Persistent Search History:** Stores previous insights in MongoDB for instant retrieval.
+* **Fully Responsive:** A "Mobile-First" design approach ensures usability on smartphones and desktops.
+* **Secure Architecture:** Uses Environment Variables and `.gitignore` to protect sensitive API credentials.
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the repository
+```bash
+git clone <your-repository-url>
+cd brew
