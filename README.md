@@ -1,4 +1,3 @@
-Here is the entire **README.md** file content in one single code block. You can copy everything inside this box and paste it directly into your file.
 
 ```markdown
 # 🎬 AI Movie Insight Builder
