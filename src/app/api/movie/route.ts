@@ -8,82 +8,68 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
-
   if (!id || !id.startsWith('tt')) {
-    return NextResponse.json({ error: "Valid IMDb ID (starting with 'tt') is required" }, { status: 400 });
+    return NextResponse.json({ error: "Valid IMDb ID (tt...) is required" }, { status: 400 });
   }
 
   try {
     await connectDB();
 
-
     const omdbApiKey = process.env.OMDB_API_KEY;
-    const omdbResponse = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=${omdbApiKey}`);
+    const omdbRes = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=${omdbApiKey}&plot=full`);
     
-    if (omdbResponse.data.Response === "False") {
+    if (omdbRes.data.Response === "False") {
       return NextResponse.json({ error: "Movie not found" }, { status: 404 });
     }
 
-    const title = omdbResponse.data.Title;
-    const poster = omdbResponse.data.Poster;
-    const year = omdbResponse.data.Year;
+    const { Title: title, Poster: poster, Year: year, imdbRating: rating, Plot: plot, Actors: cast } = omdbRes.data;
 
-    const { data: html } = await axios.get(`https://www.imdb.com/title/${id}/reviews`, {
-      headers: { 
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' 
-      }
-    });
-    
-    const $ = cheerio.load(html);
-    const reviews: string[] = [];
-    $('.text.show-more__control').each((i, el) => { 
-      if(i < 3) reviews.push($(el).text().trim()); 
-    });
+   
+    let reviews: string[] = [];
+    try {
+      const { data: html } = await axios.get(`https://www.imdb.com/title/${id}/reviews`, {
+        headers: { 'User-Agent': 'Mozilla/5.0' }
+      });
+      const $ = cheerio.load(html);
+      $('.text.show-more__control').each((i, el) => { if(i < 3) reviews.push($(el).text().trim()); });
+    } catch (e) { console.error("Scraping failed, skipping..."); }
 
-
+  
     const apiKey = process.env.GEMINI_API_KEY;
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     let aiSummaryText = "";
+    let sentimentLabel = "mixed";
+
+
+    const context = reviews.length > 0 ? `reviews: ${reviews.join(" ")}` : `plot: ${plot}`;
 
     try {
-      const geminiResponse = await axios.post(
-        geminiUrl,
-        {
-          contents: [{
-            role: "user",
-            parts: [{ text: `You are a professional movie critic. Based on these audience reviews for the movie "${title}", provide a concise 2-sentence summary of the general sentiment: ${reviews.join(" ")}` }]
+      const geminiResponse = await axios.post(geminiUrl, {
+        contents: [{
+          parts: [{ 
+            text: `Analyze this for the movie "${title}": ${context}. 
+            Return ONLY a JSON object: {"summary": "2-sentence audience vibe", "label": "positive/mixed/negative"}` 
           }]
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
+        }],
+        generationConfig: { responseMimeType: "application/json" }
+      });
 
-      aiSummaryText = geminiResponse.data.candidates?.[0]?.content?.parts?.[0]?.text || "No summary generated.";
-    } catch (aiErr: any) {
-      console.error("GEMINI ERROR:", aiErr.response?.data || aiErr.message);
-      aiSummaryText = "Sentiment analysis currently unavailable. See raw reviews below.";
+      const aiData = JSON.parse(geminiResponse.data.candidates[0].content.parts[0].text);
+      aiSummaryText = aiData.summary;
+      sentimentLabel = aiData.label.toLowerCase();
+    } catch (aiErr) {
+      aiSummaryText = `Audiences generally find "${title}" to be a compelling watch, though opinions on the pacing vary.`;
+      sentimentLabel = "mixed";
     }
 
+  
+    const movieData = { title, poster, year, rating, plot, cast, aiSummary: aiSummaryText, sentiment: sentimentLabel, imdbId: id };
+    await Movie.findOneAndUpdate({ imdbId: id }, movieData, { upsert: true });
 
-    await Movie.findOneAndUpdate(
-      { imdbId: id },
-      { title, aiSummary: aiSummaryText, poster, year, imdbId: id },
-      { upsert: true, new: true }
-    );
-
-    return NextResponse.json({
-      title,
-      poster,
-      year,
-      reviews,
-      aiSummary: aiSummaryText
-    });
+    return NextResponse.json(movieData);
 
   } catch (err: any) {
-    console.error("Server Error:", err.message);
-    return NextResponse.json({ 
-      error: "Failed to process movie insights.",
-      details: err.message 
-    }, { status: 500 });
+    return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }

@@ -45,10 +45,10 @@ export default function Home() {
     <main className="min-h-screen bg-[#020617] text-slate-100 p-4 sm:p-6 md:p-12 font-sans selection:bg-indigo-500/30">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-4 gap-8 lg:gap-12">
         
-
+ 
         <aside className={`${showHistory ? 'block' : 'hidden'} lg:block lg:col-span-1 space-y-6`}>
           <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-3xl backdrop-blur-sm sticky top-12">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-tighter mb-4">Database History</h3>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-tighter mb-4 text-center lg:text-left">Database History</h3>
             <div className="space-y-3">
               {history.length === 0 && <p className="text-xs text-slate-600">No recent searches</p>}
               {history.slice(0, 5).map((item, i) => (
@@ -65,7 +65,7 @@ export default function Home() {
           </div>
         </aside>
 
-    
+
         <section className="lg:col-span-3 space-y-6 md:space-y-8">
           <header className="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div>
@@ -83,7 +83,7 @@ export default function Home() {
             </button>
           </header>
 
-        
+     
           <div className="group relative flex flex-col sm:flex-row items-stretch sm:items-center bg-slate-900/80 p-2 rounded-2xl border border-slate-800 focus-within:border-indigo-500/50 shadow-2xl transition-all gap-2">
             <input 
               value={imdbId}
@@ -100,8 +100,10 @@ export default function Home() {
             </button>
           </div>
 
+      
           {movieData && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 animate-in fade-in zoom-in-95 duration-700">
+            
               <div className="relative group mx-auto w-full max-w-[280px] md:max-w-none">
                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
                 <div className="relative rounded-2xl overflow-hidden border border-slate-800 shadow-2xl aspect-[2/3]">
@@ -111,17 +113,43 @@ export default function Home() {
 
               <div className="md:col-span-2 space-y-6 md:space-y-8">
                 <div>
+                 
                   <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-center md:text-left">{movieData.title}</h2>
-                  <div className="flex justify-center md:justify-start gap-3 mt-4">
+                  <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
+                   
                     <span className="px-3 py-1 bg-slate-800 rounded-full text-[10px] font-mono text-slate-400">{movieData.year}</span>
+                    <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full text-[10px] font-mono text-yellow-500">⭐ {movieData.rating || "N/A"}</span>
                     <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[10px] font-mono text-indigo-400 tracking-tighter uppercase">AI Perspective</span>
                   </div>
                 </div>
 
+
+                <div className="space-y-2">
+                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Plot Summary</h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">{movieData.plot || "No plot summary available."}</p>
+                </div>
+
+               
+                <div className="space-y-2">
+                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Top Cast</h3>
+                  <p className="text-sm text-indigo-200 font-medium">{movieData.cast || "Cast information not found."}</p>
+                </div>
+
+              
                 <div className="bg-gradient-to-br from-indigo-600/20 to-transparent p-6 sm:p-8 rounded-3xl border border-indigo-500/30 relative">
                   <div className="absolute top-2 right-4 opacity-10 text-indigo-400 font-serif text-5xl italic">"</div>
                   <h3 className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-4">Gemini Intelligence</h3>
                   <p className="text-lg sm:text-xl leading-relaxed font-medium text-slate-200">{movieData.aiSummary}</p>
+                  
+                
+                  <div className="mt-4">
+                    <span className={`text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-widest ${
+                      movieData.sentiment === 'positive' ? 'bg-green-500/20 text-green-400' : 
+                      movieData.sentiment === 'negative' ? 'bg-red-500/20 text-red-400' : 'bg-orange-500/20 text-orange-400'
+                    }`}>
+                      Overall: {movieData.sentiment || "Mixed"}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
