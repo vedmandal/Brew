@@ -1,3 +1,6 @@
+Here is the entire **README.md** file content in one single code block. You can copy everything inside this box and paste it directly into your file.
+
+```markdown
 # 🎬 AI Movie Insight Builder
 ### Brew Full-Stack Developer Internship | Round 1 Submission
 
@@ -39,3 +42,43 @@ I chose this specific stack to meet the "Premium and Modern" requirements of the
 ```bash
 git clone <your-repository-url>
 cd brew
+
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+
+```
+
+### 3. Environment Configuration
+
+Create a `.env.local` file in the root directory and include the following:
+
+```text
+MONGODB_URI=your_mongodb_connection_string
+GEMINI_API_KEY=your_gemini_api_key
+OMDB_API_KEY=da1b2b62
+
+```
+
+### 4. Run Development Server
+
+```bash
+npm run dev
+
+```
+
+Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) to view the app.
+
+---
+
+## 📝 Assumptions & Logic
+
+* **Scraping Depth:** The system scrapes the top 3-5 reviews. This sample size was chosen to provide high accuracy for the AI while maintaining fast response times.
+* **ID Prefix:** The app assumes input follows the IMDb `tt` prefix standard (e.g., tt0816692).
+* **Data Freshness:** If a movie exists in the database, the app serves the cached version to minimize API costs and improve speed.
+
+---
+
