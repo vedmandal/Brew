@@ -1,4 +1,5 @@
 
+
 ```markdown
 # 🎬 AI Movie Insight Builder
 ### Brew Full-Stack Developer Internship | Round 1 Submission
@@ -6,7 +7,7 @@
 ---
 
 ## 🚀 Live Deployment
-**[🔗 View Live App on Vercel]  https://brew-alpha.vercel.app **
+**[🔗 View Live App on Vercel](https://brew-alpha.vercel.app)**
 
 ---
 
@@ -39,7 +40,7 @@ I chose this specific stack to meet the "Premium and Modern" requirements of the
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repository-url>
+git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME)
 cd brew
 
 ```
@@ -81,3 +82,4 @@ Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:30
 
 ---
 
+```
